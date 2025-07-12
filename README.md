@@ -77,12 +77,6 @@ Ensure it targets the GPU node pool using node selectors or tolerations.
 ### 5.3 Inspect the Running Workload  
 Use Kubernetes tools to inspect logs, resource usage, and confirm the workload is isolated and running efficiently on the GPU node pool.
 
----
-
-## Summary & Cleanup
-
-Recap what was accomplished: isolation via vCluster, GPU efficiency, and ML integration.  
-Include guidance for tearing down the infrastructure to avoid unwanted charges.
 
 ---
 
