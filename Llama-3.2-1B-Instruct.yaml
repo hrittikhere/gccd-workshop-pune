@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llm
+  template:
+    metadata:
+      labels:
+        app: llm
+    spec:
+      containers:
+      - name: llm
+        image: us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-text-generation-inference-cu121.2-1.ubuntu2204.py310
+        resources:
+          requests:
+            cpu: "5"
+            memory: "10Gi"
+            nvidia.com/gpu: "1"
+          limits:
+            cpu: "10"
+            memory: "40Gi"
+            nvidia.com/gpu: "1"
+        env:
+        - name: MODEL_ID
+          value: meta-llama/Llama-3.2-1B-Instruct
+        - name: NUM_SHARD
+          value: "2"
+        - name: MAX_INPUT_TOKENS
+          value: "2048"
+        - name: PORT
+          value: "8080"
+        - name: QUANTIZE
+          value: bitsandbytes-nf4
+        - name: HUGGING_FACE_HUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: l4-demo
+              key: HUGGING_FACE_TOKEN
+        volumeMounts:
+          - mountPath: /dev/shm
+            name: dshm
+          # mountPath is set to /tmp as it's the path where the HUGGINGFACE_HUB_CACHE environment
+          # variable in the TGI DLCs is set to instead of the default /data set within the TGI default image.
+          # i.e. where the downloaded model from the Hub will be stored
+          - mountPath: /tmp
+            name: ephemeral-volume
+      volumes:
+        - name: dshm
+          emptyDir:
+              medium: Memory
+        - name: ephemeral-volume
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                labels:
+                  type: ephemeral
+              spec:
+                accessModes: ["ReadWriteOnce"]
+                storageClassName: "premium-rwo"
+                resources:
+                  requests:
+                    storage: 150Gi
+      nodeSelector:
+        cloud.google.com/gke-accelerator: "nvidia-l4"
+        cloud.google.com/gke-max-shared-clients-per-gpu: '4'
+        cloud.google.com/gke-gpu-sharing-strategy: time-sharing
