@@ -11,7 +11,11 @@ Welcome to the workshop where we explore how to build and manage isolated, GPU-p
   You'll need billing enabled and permissions to create GKE clusters and resources.
 
 - **Hugging Face Account**  
-  Required to generate tokens and access model endpoints like Llama 3.2-1B-Instruct.
+  Required to generate tokens and access model endpoints like Llama 3.2-1B-Instruct.  [Hugging Face Llama Model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct)
+
+  
+- **vCluster CLI**  
+https://www.vcluster.com/docs/vcluster/deploy/basics
 
 ---
 
@@ -34,7 +38,6 @@ This provides tenant-level isolation within your main GKE cluster and is ideal f
 
 ## 3. Access Hugging Face Model and Generate Token
 
- [Hugging Face Llama Model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct)
 
 Sign into Hugging Face and request access to the `meta-llama/Llama-3.2-1B-Instruct` model.  
 Generate a personal access token to authenticate your workloads with the model API.
