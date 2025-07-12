@@ -18,14 +18,14 @@ spec:
         - name: tgi-container
           image: us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-text-generation-inference-cu124.2-3.ubuntu2204.py311
           resources:
-          requests:
-            cpu: "5"
-            memory: "10Gi"
-            nvidia.com/gpu: "1"
-          limits:
-            cpu: "10"
-            memory: "40Gi"
-            nvidia.com/gpu: "1"
+            requests:
+              cpu: "5"
+              memory: "10Gi"
+              nvidia.com/gpu: "1"
+            limits:
+              cpu: "10"
+              memory: "40Gi"
+              nvidia.com/gpu: "1"
           env:
             - name: MODEL_ID
               value: meta-llama/Llama-3.2-11B-Vision-Instruct
