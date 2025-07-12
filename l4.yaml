@@ -20,6 +20,8 @@ spec:
           resources:
             requests:
               nvidia.com/gpu: 1
+            limits:
+              nvidia.com/gpu: 1
           env:
             - name: MODEL_ID
               value: meta-llama/Llama-3.2-11B-Vision-Instruct
