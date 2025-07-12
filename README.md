@@ -29,10 +29,10 @@ This separation helps ensure resource isolation and efficiency.
 
 ---
 
-## 2. Deploy vCluster in the Cloud
+## 2. Use vCluster in the Cloud
+Use -> https://vcluster.cloud/
 
-Create a virtual Kubernetes cluster using vCluster.  
-This provides tenant-level isolation within your main GKE cluster and is ideal for multi-tenant GPU workloads.
+This provides tenant-level isolation within your main GKE cluster and is ideal for multi-tenant GPU workloads. Next step is to connect
 
 ---
 
