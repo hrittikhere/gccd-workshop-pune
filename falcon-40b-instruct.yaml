@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llm
+  template:
+    metadata:
+      labels:
+        app: llm
+    spec:
+      containers:
+      - name: llm
+        image: us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-text-generation-inference-cu121.1-4.ubuntu2204.py310
+        resources:
+          requests:
+            cpu: "10"
+            memory: "60Gi"
+            nvidia.com/gpu: "1"
+          limits:
+            cpu: "10"
+            memory: "60Gi"
+            nvidia.com/gpu: "1"
+        env:
+        - name: MODEL_ID
+          value: tiiuae/falcon-40b-instruct
+        - name: NUM_SHARD
+          value: "1"
+        - name: PORT
+          value: "8080"
+        - name: QUANTIZE
+          value: bitsandbytes-nf4
+        volumeMounts:
+          - mountPath: /dev/shm
+            name: dshm
+          # mountPath is set to /data as it's the path where the HUGGINGFACE_HUB_CACHE environment
+          # variable points to in the TGI container image i.e. where the downloaded model from the Hub will be
+          # stored
+          - mountPath: /data
+            name: ephemeral-volume
+      volumes:
+        - name: dshm
+          emptyDir:
+              medium: Memory
+        - name: ephemeral-volume
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                labels:
+                  type: ephemeral
+              spec:
+                accessModes: ["ReadWriteOnce"]
+                storageClassName: "premium-rwo"
+                resources:
+                  requests:
+                    storage: 175Gi
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-l4
+        cloud.google.com/gke-max-shared-clients-per-gpu: '4'
+        cloud.google.com/gke-gpu-sharing-strategy: time-sharing
